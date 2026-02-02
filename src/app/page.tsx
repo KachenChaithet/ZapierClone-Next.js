@@ -1,23 +1,22 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
-import ClientComponent from "./client";
-import { getQueryClient, trpc } from "@/trpc/server";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { Suspense } from "react";
+import { authClient } from "@/lib/auth-client"
 
-const page = async () => {
-  const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery(trpc.getUsers.queryOptions())
+const page = () => {
+
+  const { data } = authClient.useSession()
 
   return (
     <div>
-      <Button>Click me</Button>
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>loading...</div>}>
+      {JSON.stringify(data)}
+      {data && (
+        <Button onClick={() => authClient.signOut()}>
+          Logout
+        </Button>
+      )}
 
-          <ClientComponent />
-        </Suspense>
-      </HydrationBoundary>
     </div>
   )
 }
