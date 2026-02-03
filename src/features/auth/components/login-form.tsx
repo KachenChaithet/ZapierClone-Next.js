@@ -9,6 +9,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@base-ui/react";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
     email: z.email("Please enter a vaild email address"),
@@ -28,7 +30,22 @@ export function LoginForm() {
     })
 
     const onSubmit = async (values: LoginFormValues) => {
-        console.log(values);
+        await authClient.signIn.email({
+            email: values.email,
+            password: values.password,
+            callbackURL: "/"
+        }, {
+            onSuccess: () => {
+                router.push('/')
+                toast.success("Login Success!")
+            },
+            onError(ctx) {
+                toast.error(ctx.error.message)
+            },
+        }
+
+
+        )
     }
     const isPending = form.formState.isSubmitting
 
@@ -67,7 +84,7 @@ export function LoginForm() {
                                                 <FormControl>
                                                     <Input className={'outline-none border p-1 rounded-md'} type="password" placeholder="********" {...field} />
                                                 </FormControl>
-                                                <FormMessage className="text-red-500"/>
+                                                <FormMessage className="text-red-500" />
                                             </FormItem>
                                         )} />
                                         <Button type="submit" className="w-full" disabled={isPending}>Login</Button>
@@ -75,7 +92,7 @@ export function LoginForm() {
                                     <div className="text-center text-sm">
                                         Don&apos;t have an account?{" "}
 
-                                        <Link href={"/signup"} className="underline underline">Sign Up</Link>
+                                        <Link href={"/signup"} className="underline underline-4">Sign Up</Link>
                                     </div>
                                 </div>
                             </div>
