@@ -5,9 +5,9 @@ import { prisma } from "@/lib/db"
 const page = async () => {
     await requireUnauth()
     return (
-        <div>
+        <>
             <RegisterForm />
-        </div>
+        </>
     )
 }
 export default page
