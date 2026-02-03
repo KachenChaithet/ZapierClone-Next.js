@@ -11,6 +11,7 @@ import { Input } from "@base-ui/react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const loginSchema = z.object({
     email: z.email("Please enter a vaild email address"),
@@ -65,8 +66,14 @@ export function LoginForm() {
                         <form onSubmit={form.handleSubmit(onSubmit)}>
                             <div className="grid gap-6">
                                 <div className="flex flex-col gap-4">
-                                    <Button variant={'outline'} className="w-full" type="button" disabled={isPending}>Continue with Github</Button>
-                                    <Button variant={'outline'} className="w-full" type="button" disabled={isPending}>Continue with Google</Button>
+                                    <Button variant={'outline'} className="w-full" type="button" disabled={isPending}>
+                                        <Image src={"/logos/github.svg"} alt="image" width={20} height={20} />
+                                        Continue with Github
+                                    </Button>
+                                    <Button variant={'outline'} className="w-full" type="button" disabled={isPending}>
+                                        <Image src={"/logos/google.svg"} alt="image" width={20} height={20} />
+                                        Continue with Google
+                                    </Button>
                                     <div className="grid gap-6"
                                     >
                                         <FormField control={form.control} name="email" render={({ field, fieldState }) => (
