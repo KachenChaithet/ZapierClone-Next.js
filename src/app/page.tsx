@@ -16,7 +16,10 @@ const page = () => {
   const { data } = useQuery(trpc.getWorkflows.queryOptions())
   const testAi = useMutation(trpc.testAi.mutationOptions({
     onSuccess: () => {
-toast.success("Ai Job queued")
+      toast.success("Ai Job queued")
+    },
+    onError: () => {
+toast.error('Something went wrong')
     }
   }))
 
