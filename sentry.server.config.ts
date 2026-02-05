@@ -3,7 +3,11 @@ import Sentry from "@sentry/nextjs"
 
 Sentry.init({
   dsn: "https://705366d817e157542116f77d00a022a8@o4509739783290880.ingest.us.sentry.io/4510827733254144",
-
+  integrations: [
+    // send console.log, console.warn, and console.error calls as logs to Sentry
+    Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
+  ],
+  enableLogs: true,
   // Tracing must be enabled for agent monitoring to work
   tracesSampleRate: 1.0,
   // Add data like inputs and responses to/from LLMs and tools;
