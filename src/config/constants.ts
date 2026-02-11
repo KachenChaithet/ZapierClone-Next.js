@@ -1,6 +1,6 @@
 export const PAGINATION = {
     DEFAULT_PAEG: 1,
-    DEFAULT_PAEG_SIZE: 2,
+    DEFAULT_PAEG_SIZE: 5,
     MAX_PAGE_SIZE: 100, 
     MIN_PAGE_SIZE: 1, 
 }
