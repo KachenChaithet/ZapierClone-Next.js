@@ -95,7 +95,6 @@ enum NodeType {
   HTTP_REQUEST
 }
 
-
 model Node {
   id         String   @id @default(cuid())
   workflowId String

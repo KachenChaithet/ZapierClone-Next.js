@@ -3,34 +3,47 @@ import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbS
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import { useSuspenseWorkflow, useUpdateWorkflow } from "@/features/workflows/hooks/use-workflows"
+import { useSuspenseWorkflow, useUpdateWorkflow, useUpdateWorkflowName } from "@/features/workflows/hooks/use-workflows"
+import { useAtomValue } from "jotai"
 import { SaveIcon } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
+import { editorAtom } from "../store/atoms"
 
 
 export const EditorSaveButton = ({ workflowId }: { workflowId: string }) => {
+    const editor = useAtomValue(editorAtom);
+    const saveworkflow = useUpdateWorkflow()
+
+    const handleSave = () => {
+        console.log('save');
+
+        if (!editor) {
+            return;
+        };
+
+        const nodes = editor.getNodes();
+        const edges = editor.getEdges();
+
+        saveworkflow.mutate({
+            id: workflowId,
+            nodes,
+            edges
+        })
+    }
     return (
-        <Breadcrumb>
-            <BreadcrumbList>
-                <BreadcrumbItem>
-                    <BreadcrumbLink asChild>
-                        <Link prefetch href={'/workflows'}>
-                            Workflows
-                        </Link>
-                    </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <EditorNameInput workflowId={workflowId} />
-            </BreadcrumbList>
-        </Breadcrumb>
+        <div className="ml-auto">
+            <Button size={'sm'} onClick={handleSave} disabled={saveworkflow.isPending}>
+                <SaveIcon className="size-4" />
+            </Button>
+        </div>
     )
 }
 
 
 export const EditorNameInput = ({ workflowId }: { workflowId: string; }) => {
     const { data: workflow } = useSuspenseWorkflow(workflowId)
-    const updateWorkflow = useUpdateWorkflow()
+    const updateWorkflow = useUpdateWorkflowName()
 
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(workflow.name)
@@ -59,7 +72,7 @@ export const EditorNameInput = ({ workflowId }: { workflowId: string; }) => {
         try {
             await updateWorkflow.mutateAsync({
                 id: workflowId,
-                name,
+                name
             })
         } catch (error) {
             setName(workflow.name)
@@ -103,11 +116,19 @@ export const EditorNameInput = ({ workflowId }: { workflowId: string; }) => {
 
 export const EditorBreadcrumbs = ({ workflowId }: { workflowId: string }) => {
     return (
-        <div className="ml-auto">
-            <Button size={'sm'} onClick={() => { }} disabled={false}>
-                <SaveIcon className="size-4" />
-            </Button>
-        </div>
+        <Breadcrumb>
+            <BreadcrumbList>
+                <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                        <Link prefetch href={'/workflows'}>
+                            Workflows
+                        </Link>
+                    </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <EditorNameInput workflowId={workflowId} />
+            </BreadcrumbList>
+        </Breadcrumb>
     )
 }
 
@@ -118,8 +139,8 @@ const EditorHeader = ({ workflowId }: { workflowId: string }) => {
         <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 bg-background">
             <SidebarTrigger />
             <div className="flex flex-row items-center justify-between gap-x-4 w-full ">
-                <EditorSaveButton workflowId={workflowId} />
                 <EditorBreadcrumbs workflowId={workflowId} />
+                <EditorSaveButton workflowId={workflowId} />
             </div>
         </header>
     )
