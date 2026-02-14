@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import { NodeToolbar, Position } from "@xyflow/react";
-import { ReactNode } from "react"
-import { Button } from "./ui/button";
 import { SettingsIcon, TrashIcon } from "lucide-react";
+import type { ReactNode } from "react";
+import { Button } from "./ui/button";
 
 interface WorkflowNodeProps {
     children: ReactNode;
@@ -12,7 +12,7 @@ interface WorkflowNodeProps {
     onSettings?: () => void;
     name?: string;
     description?: string;
-}
+};
 
 export function WorkflowNode({
     children,
@@ -26,10 +26,10 @@ export function WorkflowNode({
         <>
             {showToolbar && (
                 <NodeToolbar>
-                    <Button size={'sm'} variant={'ghost'} onClick={onSettings}>
+                    <Button size="sm" variant="ghost" onClick={onSettings}>
                         <SettingsIcon className="size-4" />
                     </Button>
-                    <Button size={'sm'} variant={'ghost'} onClick={onDelete}>
+                    <Button size="sm" variant="ghost" onClick={onDelete}>
                         <TrashIcon className="size-4" />
                     </Button>
                 </NodeToolbar>
@@ -52,5 +52,5 @@ export function WorkflowNode({
                 </NodeToolbar>
             )}
         </>
-    )
-}
+    );
+};
